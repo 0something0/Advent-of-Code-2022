@@ -1,5 +1,11 @@
 from typing import TextIO
 
+def get_priority(char: str):
+    if char.islower():
+        return ord(char) - 96
+    elif char.isupper():
+        return ord(char) - 65 + 27
+
 # reads next n lines from the given file
 def read_multiple_lines(f: TextIO, num_lines):
 
@@ -25,7 +31,9 @@ with open('day3_input') as f:
             for char2 in line_triplet[1]:
                 for char3 in line_triplet[2]:
                     if char1 == char2 and char2 == char3:
-                        print(char1)
+                        priority_sum += get_priority(char1)
 
         # gets next set of line triple
         line_triplet = read_multiple_lines(f, 3)
+
+print(priority_sum)
