@@ -21,7 +21,11 @@ with open('day3_input') as f:
         #remove duplicate values
         line_triplet = [set(line) for line in line_triplet]
 
-        print(line_triplet)
+        for char1 in line_triplet[0]:
+            for char2 in line_triplet[1]:
+                for char3 in line_triplet[2]:
+                    if char1 == char2 and char2 == char3:
+                        print(char1)
 
         # gets next set of line triple
         line_triplet = read_multiple_lines(f, 3)
