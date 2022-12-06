@@ -1,5 +1,7 @@
 
 from typing import List
+
+#takes in each stack, returns each stack as a seperate list
 def process_stacks(stacks: List[str]):
 
     #stacks should NOT have a newline at the end
@@ -19,6 +21,10 @@ def process_stacks(stacks: List[str]):
     #there's 4 characters between each container column, get only the containers and put them into a list
     stacks = [list(line[::4]) for line in stacks]
 
+    print(stacks)
+    stacks = list(zip(*stacks[::-1])) #https://stackoverflow.com/questions/8421337/rotating-a-two-dimensional-array-in-python
+    print(stacks)
+
     return stacks
 
 def process_procedures(procedures: List[str]):
@@ -30,21 +36,12 @@ def process_procedures(procedures: List[str]):
 
     return procedures_list_dict
 
-stacks_ndlist = []
+stacks_list = []
 with open('stacks.txt') as stacks_file:
-    stacks_ndlist = process_stacks(stacks_file.readlines())
+    stacks_list = process_stacks(stacks_file.readlines())
 
-#convert to numpy ndarray because I can't be bothered to do multidimensional work manually
-import numpy as np
-stacks = np.array(stacks_ndlist)
-
-# Prepend blank column, such that array columns start at 1
+# Prepend blank list, such that the real lists start at 1
 # I'm not dealing with bugs popping up from converting from 1-indexing (in the procedures) to 0-indexing
-stacks = np.hstack([np.full((len(stacks), 1), ' '), stacks])
+stacks_list = [[]] + stacks_list
 
-print(stacks)
-
-# Read procedures from list of files as dict
-procedures_list = []
-with open('procedures.txt') as proc_f:
-    procedures_list = process_procedures(proc_f)
+print(stacks_list)
