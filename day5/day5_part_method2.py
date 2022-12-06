@@ -23,6 +23,13 @@ def process_stacks(stacks: List[str]):
 
     print(stacks)
     stacks = list(zip(*stacks[::-1])) #https://stackoverflow.com/questions/8421337/rotating-a-two-dimensional-array-in-python
+    stacks = [list(val) for val in stacks]
+
+    for stack in stacks:
+        while ' ' in stack:
+            stack.remove(' ')
+        
+    print("STACK TO RETURN")
     print(stacks)
 
     return stacks
@@ -32,7 +39,8 @@ def process_procedures(procedures: List[str]):
     procedures_list_dict = []
     for line in procedures:
         line = line.replace('move', '').replace('from', ' ').replace('to', ' ').split()
-        procedures_list_dict.append({'quantity': line[0], 'source': line[1], 'target': line[1]})
+        line = [int(val) for val in line]
+        procedures_list_dict.append({'quantity': line[0], 'source': line[1], 'target': line[2]})
 
     return procedures_list_dict
 
@@ -45,3 +53,38 @@ with open('stacks.txt') as stacks_file:
 stacks_list = [[]] + stacks_list
 
 print(stacks_list)
+
+
+# Read procedures from list of files as dict
+procedures_list = []
+with open('procedures.txt') as proc_f:
+    procedures_list = process_procedures(proc_f)
+
+for procedures in procedures_list:
+
+    print(procedures)
+
+    quantity = procedures['quantity']
+    source = procedures['source']
+    target = procedures['target']
+
+    for i in range(0, quantity):
+        val = stacks_list[source].pop()
+        print(stacks_list)
+
+        stacks_list[target].append(val)
+
+        print(stacks_list)
+print(stacks_list)
+
+top_list = ""
+for stack in stacks_list[1:]:
+    top_list += stack[-1]
+
+print(top_list)
+
+# major blocks
+# - forgot to strip whitespace in rotated matrix list, causing whitespace to get moved around
+# - indexing error 
+# {'quantity': line[0], 'source': line[1], 'target': line[1]} instead of {'quantity': line[0], 'source': line[1], 'target': line[2]
+# - forgot to remove empty first list (made for one-indexing)
