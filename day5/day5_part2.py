@@ -26,21 +26,22 @@ def process_stacks(stacks: List[str]):
     #there's 4 characters between each container column, get only the containers and put them into a list
     stacks = [list(line[::4]) for line in stacks]
 
-    print(stacks)
-    stacks = list(zip(*stacks[::-1])) #https://stackoverflow.com/questions/8421337/rotating-a-two-dimensional-array-in-python
+    #transpose matrix such that each row contains one stack
+    #https://stackoverflow.com/questions/8421337/rotating-a-two-dimensional-array-in-python
+    stacks = list(zip(*stacks[::-1]))
     stacks = [list(val) for val in stacks]
 
+    #trim the top of stacks
     for stack in stacks:
         while ' ' in stack:
             stack.remove(' ')
-        
-    print("STACK TO RETURN")
-    print(stacks)
 
     return stacks
 
+#turn the procedures text file into list of instruction dictionaries
 def process_procedures(procedures: List[str]):
     
+    #remove the words, convert chars into ints, and convert list into dict with named keys for readability
     procedures_list_dict = []
     for line in procedures:
         line = line.replace('move', '').replace('from', ' ').replace('to', ' ').split()
@@ -49,6 +50,7 @@ def process_procedures(procedures: List[str]):
 
     return procedures_list_dict
 
+# Read file
 stacks_list = []
 with open('stacks.txt') as stacks_file:
     stacks_list = process_stacks(stacks_file.readlines())
@@ -57,14 +59,12 @@ with open('stacks.txt') as stacks_file:
 # I'm not dealing with bugs popping up from converting from 1-indexing (in the procedures) to 0-indexing
 stacks_list = [[]] + stacks_list
 
-print(stacks_list)
-
-
-# Read procedures from list of files as dict
+# Get list of procedures
 procedures_list = []
 with open('procedures.txt') as proc_f:
     procedures_list = process_procedures(proc_f)
 
+# Execute each procedure
 for count, procedures in enumerate(procedures_list):
 
     print(f'Procedure {count}\t' + str(procedures))
@@ -89,14 +89,10 @@ for count, procedures in enumerate(procedures_list):
     pretty_print_stacks(stacks_list)
     print('')
 
+# Get answer string ()
 top_list = ""
 for stack in stacks_list[1:]:
     top_list += stack[-1]
 
 print(top_list)
 
-# major blocks
-# - forgot to strip whitespace in rotated matrix list, causing whitespace to get moved around
-# - indexing error 
-# {'quantity': line[0], 'source': line[1], 'target': line[1]} instead of {'quantity': line[0], 'source': line[1], 'target': line[2]
-# - forgot to remove empty first list (made for one-indexing)
