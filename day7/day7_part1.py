@@ -21,11 +21,6 @@ with open('day7_input.txt', 'r') as f:
         if line.strip() == '$ cd /' or line.strip() == '$ ls' or line.strip()[:3] == 'dir':
             pass
 
-        # Entering directory
-        elif line.strip()[:-1] == '$ cd ':
-            stack.append(0)
-            stack_dirname.append(line.strip()[-1])
-
         # Exiting directory
         elif line.strip() == '$ cd ..':
 
@@ -35,6 +30,12 @@ with open('day7_input.txt', 'r') as f:
             stack[-2] += stack[-1]
             stack.pop()
             stack_dirname.pop()
+
+        # Entering directory
+        elif line.strip()[:5] == '$ cd ':
+            stack.append(0)
+            print(line)
+            stack_dirname.append(line.strip().split()[-1])
     
         # Check if line contains a directory size
         # Split line into two, attempt casat zeroth element to integer
@@ -44,6 +45,7 @@ with open('day7_input.txt', 'r') as f:
             stack[-1] = file_size + stack[-1]
 
         print(stack)
+        print(stack_dirname)
         print(list_of_dirs_under_100k)
 
     # clean up stack at the end
@@ -54,4 +56,11 @@ with open('day7_input.txt', 'r') as f:
     stack.pop()
     stack_dirname.pop()
 
+    print(stack)
+    print(stack_dirname)
+    print(list_of_dirs_under_100k)
 
+# Setback 1 - given test data only had 1-char directory names, so program only checked for 1-char directories
+#             whereas real data has longer dir names
+# Setback 1.1 - filtering for 'cd ..' is more strict and so should have taken precdence
+#               ,but 'cd [dirname]' came first, causing '..' to be included in filenames 

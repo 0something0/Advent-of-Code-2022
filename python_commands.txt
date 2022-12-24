@@ -1,0 +1,28 @@
+list.append(x)
+
+    Add an item to the end of the list. Equivalent to a[len(a):] = [x].
+
+
+a[start_index:end_index] = [x]
+    index can start out of bound, in which case it gets the 
+    a[start_index:end_index] and [x] can have different lengths, and it will substitute fine
+
+
+Difference betweeen iterating a file directly, and iterating file.readlines()
+
+Mutiple splitting
+
+string.replace("a", "b").split("b")
+
+
+Numpy array initalization
+np.full
+np.zero
+np.fill
+
+Numpy composite array
+np.hstack (add cols)
+np.vstack (add rows)
+
+Python list removal of values
+list.pop()
