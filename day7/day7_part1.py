@@ -4,7 +4,7 @@ def close_directory():
 with open('day7_input.txt', 'r') as f:
 
     stack = [0]
-    stack_dirname = ['/']
+    stack_dirname = []
     list_of_dirs_under_100k = []
 
     for line in f:
@@ -24,8 +24,9 @@ with open('day7_input.txt', 'r') as f:
         # Exiting directory
         elif line.strip() == '$ cd ..':
 
-            if stack[-1] <= 100000:
-                list_of_dirs_under_100k.append(stack_dirname[-1])
+            current_dir_size = stack[-1]
+            if current_dir_size <= 100000:
+                list_of_dirs_under_100k.append((stack_dirname[-1], current_dir_size))
 
             stack[-2] += stack[-1]
             stack.pop()
@@ -50,7 +51,7 @@ with open('day7_input.txt', 'r') as f:
 
     # clean up stack at the end
     if stack[-1] <= 100000:
-        list_of_dirs_under_100k.append(stack_dirname[-1])
+        list_of_dirs_under_100k.append((stack_dirname[-1], current_dir_size))
 
     stack[-2] += stack[-1]
     stack.pop()
@@ -59,6 +60,12 @@ with open('day7_input.txt', 'r') as f:
     print(stack)
     print(stack_dirname)
     print(list_of_dirs_under_100k)
+
+    sum_dir_sizes = 0
+    for dir in list_of_dirs_under_100k:
+        sum_dir_sizes += dir[1]
+    
+    print(sum_dir_sizes)
 
 # Setback 1 - given test data only had 1-char directory names, so program only checked for 1-char directories
 #             whereas real data has longer dir names
