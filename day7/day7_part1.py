@@ -1,10 +1,18 @@
-def close_directory():
-    pass
+def close_directory(stack: list, list_of_dirs_under_100k: list):
+    
+    # Check if current directory has size less than 100k
+    if stack[-1][1] <= 100000:
+        list_of_dirs_under_100k.append(stack[-1])
+    
+    # Add current directory size to parent dir size
+    stack[-2][1] += stack[-1][1]
+    stack.pop()
+
+    return stack, list_of_dirs_under_100k
 
 with open('day7_input.txt', 'r') as f:
 
-    stack = [0]
-    stack_dirname = []
+    stack = [ ['/', 0] ]
     list_of_dirs_under_100k = []
 
     for line in f:
@@ -23,44 +31,33 @@ with open('day7_input.txt', 'r') as f:
 
         # Exiting directory
         elif line.strip() == '$ cd ..':
-
-            current_dir_size = stack[-1]
-            if current_dir_size <= 100000:
-                list_of_dirs_under_100k.append((stack_dirname[-1], current_dir_size))
-
-            stack[-2] += stack[-1]
-            stack.pop()
-            stack_dirname.pop()
+            stack, list_of_dirs_under_100k = close_directory(stack, list_of_dirs_under_100k)
 
         # Entering directory
         elif line.strip()[:5] == '$ cd ':
-            stack.append(0)
-            print(line)
-            stack_dirname.append(line.strip().split()[-1])
+            stack.append([ line.strip().split()[-1], 0])
     
         # Check if line contains a directory size
         # Split line into two, attempt casat zeroth element to integer
         # Relies on *every* other filter working, else casting will fail due to non-directory size text
         elif int(line.split()[0]):
             file_size = int(line.split()[0])
-            stack[-1] = file_size + stack[-1]
-
-        print(stack)
-        print(stack_dirname)
-        print(list_of_dirs_under_100k)
+            stack[-1][1] = file_size + stack[-1][1]
+        
+        #print(line.strip())
+        # print(stack)
+        # print(stack_dirname)
+        # print(list_of_dirs_under_100k)
 
     # clean up stack at the end
-    if stack[-1] <= 100000:
-        list_of_dirs_under_100k.append((stack_dirname[-1], current_dir_size))
+    # Check if current directory has size less than 100k
+    # NOTE - can't close root directory, is this a bug?
+    while len(stack) > 1:
+        stack, list_of_dirs_under_100k = close_directory(stack, list_of_dirs_under_100k)
+        print(stack)
+        print(list_of_dirs_under_100k)
 
-    stack[-2] += stack[-1]
-    stack.pop()
-    stack_dirname.pop()
-
-    print(stack)
-    print(stack_dirname)
-    print(list_of_dirs_under_100k)
-
+    # Sum directories under 100k to get final answer
     sum_dir_sizes = 0
     for dir in list_of_dirs_under_100k:
         sum_dir_sizes += dir[1]
